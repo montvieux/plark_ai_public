@@ -1,3 +1,24 @@
+data/**
+!data/agents
+data/agents/**
+!data/agents/models
+data/agents/models/**
+!data/agents/models/test_20200325_184254
+!data/agents/models/test_20200325_184254/PPO2_20200325_184254_panther/
+!data/agents/models/test_20200325_184254/PPO2_20200325_184254_pelican/
+!data/agents/models/test_20200325_184254/PPO2_20200325_184254_panther/*
+!data/agents/models/test_20200325_184254/PPO2_20200325_184254_pelican/*
+!data/agents/models/test_20200325_184254/PPO2_20200325_184254_panther/*.zip
+!data/agents/models/test_20200325_184254/PPO2_20200325_184254_pelican/*.zip
+Components/agents/models
+Components/agents/models/*
+Components/backend/agents/models
+Components/backend/agents/models/*
+Components/plark-game/plark_game/agents/models/*
+Docker/plark_robot_tests/Results/*
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -26,6 +47,11 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+Components/plark_ai_flask/model
+Components/plark_ai_flask/daves.zip
+
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

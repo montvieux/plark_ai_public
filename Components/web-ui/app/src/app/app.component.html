@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 10 10">
+        <path d="M4 0l-4 3h1v4h2v-2h2v2h2v-4.03l1 .03-4-3z" style="fill: White"/>
+      </svg>
+      Hunting the Plark</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        -->
+   
+      </ul>
+
+    </div>
+  </nav>
+
+
+<router-outlet></router-outlet>
+
+
+<app-game-config class='game-settings' *ngIf='!activeGame' (activateGame)='activateGame($event)'></app-game-config>
+<app-game-view [gameSettingsInput]="gameSettings" *ngIf='activeGame'></app-game-view>
+
+<app-footer class="mt-auto"></app-footer>

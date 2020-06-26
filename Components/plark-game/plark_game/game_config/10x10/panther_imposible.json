@@ -1,0 +1,47 @@
+{
+    "game_settings": {
+        "maximum_turns": 36,
+        "map_width": 10,
+        "map_height": 10,
+        "driving_agent": "pelican",
+        "max_illegal_moves_per_turn": 10
+    },
+    "game_rules": {
+        "bingo_limit": 36,
+        "winchester_rule": true,
+        "escape_rule": true,
+        "panther": {
+            "move_limit": 1,
+            "start_col": 5,
+            "start_row": 9,
+            "agent_filepath": "pantherAgent_random_walk.py",
+            "agent_name": "Panther_Agent_Random_Walk",
+            "render_height": 250 ,
+            "render_width": 310
+        },
+        "pelican": {
+            "move_limit": 20,
+            "madman_range": 0,
+            "agent_filepath": "pelicanAgent_5_buoys.py",
+            "agent_name":"Pelican_Agent_5_Bouys",
+            "default_torps" : 5,
+            "default_sonobuoys": 5,
+            "render_height": 250 ,
+            "render_width": 310
+        },
+        "torpedo":{
+            "speed":[3, 2],
+            "turn_limit":2,
+            "hunt": true,
+            "search_range":4
+        },
+        "sonobuoy":{
+            "active_range":4,
+            "display_range": true
+        }
+    },
+    "render_settings": {
+        "hex_scale": 40,
+        "output_view_all": false
+    }
+}

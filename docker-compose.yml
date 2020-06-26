@@ -1,0 +1,37 @@
+version: '2' # specify docker-compose version
+
+services:
+  flask_cpu: #name of the first service
+    build:  
+      dockerfile: DockerfileCPU
+      context: ./Docker # specify the directory of the Dockerfile
+    ports:
+      - "8890:8888"
+      - "5001:5000"
+    expose:
+    - "5000"
+    volumes:
+      - ./Components:/Components 
+      - ./data:/data 
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
+
+  
+  robot_tests: #name of second service
+    build:  
+      dockerfile: DockerfileRobot
+      context: ./Docker
+    depends_on:
+      - flask_cpu
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.5
+
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          ip_range: 172.28.5.0/24

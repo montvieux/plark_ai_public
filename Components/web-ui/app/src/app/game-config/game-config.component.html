@@ -1,0 +1,96 @@
+<form [formGroup]="gameSettings" (ngSubmit)="start_game()" class='w-50 pt-5 mx-auto'>
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink>Game setup</a>
+      <ng-template ngbNavContent>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6 border-right">
+              <h3>Panther</h3>
+
+              <div class="form-group">
+                <label for="pantherController">Select controller:</label>
+                <select class="form-control" id='pantherController' formControlName="pantherController">
+                  <option id='human_panther' selected>Human</option>
+                  <option id='agent_panther'>Agent</option>
+                </select>
+              </div>
+
+              <div class="form-group" *ngIf="gameSettings.value.pantherController == 'Agent'">
+                <label for="pantherAgent">Select a pretrained agent:</label>
+                <select class="form-control" id='pantherAgent' formControlName="pantherAgent"
+                  (change)="pantherAgentchange()">
+                  <option value='default'>Default panther agent</option>
+                  <option *ngFor="let agent of pantherAgents" [value]="agent.name">{{agent.name}}</option>
+                </select>
+
+                <div *ngIf='pantherAgentJson' class="form-group" style="height: 200px;">
+                  <label for="pantherAgentJson">Agent Metadata: </label>
+                  <ngx-json-viewer class='ngx-json-viewer' *ngIf='pantherAgentJson' [json]="pantherAgentJson">
+                  </ngx-json-viewer>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-sm-6">
+              <h3>Pelican</h3>
+
+              <div class="form-group">
+                <label for="pelicanController">Select controller:</label>
+                <select class="form-control" id='pelicanController' formControlName="pelicanController">
+                  <option id='human_pelican'>Human</option>
+                  <option id='agent_pelican' selected>Agent</option>
+                </select>
+              </div>
+
+              <div class="form-group" *ngIf="gameSettings.value.pelicanController == 'Agent'">
+                <label for="PelicanAgent">Select a pretrained agent:</label>
+                <select class="form-control" id='pelicanAgent' formControlName="pelicanAgent"
+                  (change)="pelicanAgentchange()">
+                  <option value='default'>Default pelican agent</option>
+                  <option *ngFor="let agent of pelicanAgents" [value]="agent.name">{{agent.name}}</option>
+                </select>
+
+                <div *ngIf='pelicanAgentJson' class="form-group" style="height: 200px;">
+                  <label for="pelicanAgentJson">Agent Metadata:</label>
+                  <ngx-json-viewer id='pelicanAgentJson' class='ngx-json-viewer' *ngIf='pelicanAgentJson'
+                    [json]="pelicanAgentJson"></ngx-json-viewer>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+    </li>
+
+    <li [ngbNavItem]="2">
+      <a ngbNavLink>Game configuration</a>
+      <ng-template ngbNavContent>
+        <label for="config_Selector">Select a configuration file to use:</label>
+        <select id='config_Selector' class="selectpicker" formControlName="config" (change)="configChanged()">
+          <option value='default'>Default config file</option>
+          <optgroup *ngFor="let group of configs" [label]="group.size">
+            <option *ngFor="let config of group.configs" [value]="config.filepath">{{config.name}}</option>
+          </optgroup>
+        </select>
+
+        <ngx-json-viewer class='ngx-json-viewer' *ngIf='configJson' [json]="configJson"></ngx-json-viewer>
+      </ng-template>
+    </li>
+
+  </ul>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+  <div class="p-3 mb-2 bg-danger text-white"
+    *ngIf="gameSettings.value.pelicanController == 'Human' && gameSettings.value.pantherController == 'Human' ">Human VS
+    human play is not supported</div>
+
+  <button id='start_game' class="btn btn-primary float-right mt-5"
+    [disabled]="gameSettings.value.pelicanController == 'Human' && gameSettings.value.pantherController == 'Human'"
+    type="submit">Start game</button>
+</form>
+
+<!-- <pre>Active: {{ active }}</pre> -->
+<!-- One -->

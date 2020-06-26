@@ -1,0 +1,205 @@
+<div class="container pt-5 mx-auto">
+  <div class="row align-items-center">
+    <ng-container *ngIf='image || video; else loading'>
+
+      <!-- Game display -->
+      <div class="col-sm-8 w-100 h-100 d-flex justify-content-center">
+        <img *ngIf='image' class="w-100 h-100" [src]="image">
+
+        <video class="w-100 h-100" *ngIf='video' controls (click)="toggleVideo()" #videoPlayer>
+          <source [src]="video" type="video/mp4" />
+          Browser not supported
+        </video>
+      </div>
+
+      <!-- Control panel -->
+      <div class="col-sm-4 parent" *ngIf='!gameEndState'>
+
+        <!-- Human player -->
+        <ng-container *ngIf='image; else videoStats'>
+          <div class="row">
+            <h3>Playing as: {{drivingAgent}}</h3>
+          </div>
+
+          <div class="row" style="margin-top:20px">
+            <div class="col-sm-4 p-1">
+              <!-- Up left  -->
+              <button id='up_left' class="w-100 btn btn-primary" (click)="action('6')"> &#8598; </button>
+            </div>
+            <div class="col-sm-4 p-1">
+              <!-- Up -->
+              <button id='up' class="w-100 btn btn-primary" (click)="action('1')"> &#8593; </button>
+            </div>
+            <div class="col-sm-4 p-1">
+              <!-- Up right -->
+              <button id='up_right' class="w-100 btn btn-primary" (click)="action('2')"> &#8599; </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4 p-1 w-100">
+              <!-- Down left -->
+              <button id='down_left' class="w-100  btn btn-primary" (click)="action('5')"> &#8601; </button>
+            </div>
+            <div class="col-sm-4 p-1 w-100">
+              <!-- Down -->
+              <button id='down' class="w-100  btn btn-primary" (click)="action('4')"> &#8595; </button>
+            </div>
+            <div class="col-sm-4 p-1 w-100">
+              <!-- Down right -->
+              <button id='down_right' class="w-100  btn btn-primary" (click)="action('3')"> &#8600; </button>
+            </div>
+          </div>
+
+          <div class="row" *ngIf='drivingAgent === "pelican"' style="margin-top:20px">
+            <div class="col-sm-6 p-1 w-100">
+              <!-- Deploy torpedo -->
+              <button id='drop_torpedo' class="w-100  btn btn-primary" (click)="action('drop_torpedo')"> Torpedo
+              </button>
+            </div>
+            <div class="col-sm-6 p-1 w-100">
+              <!-- Deploy sonobuoy -->
+              <button id='drop_sonobuoy' class="w-100  btn btn-primary" (click)="action('drop_buoy')"> Sonobouy
+              </button>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:20px">
+            <div class="p-1 w-100">
+              <!-- End turn -->
+              <button id='end_turn' class="w-100 btn btn-primary" (click)="action('end')"> End Turn</button>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:20px">
+            <div class="p-1 w-100">
+              <!-- Reset game  -->
+              <button id='reset_game' class="w-100 btn btn-primary " (click)="resetGame()"> Reset Game</button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Agent vs agent -->
+        <ng-template #videoStats>
+          <div class="row">
+            <h3>Playing: Agent vs Agent</h3>
+          </div>
+          <div class="row" style="margin-top:20px">
+            <div class="p-1 w-100">
+
+              <button id='show_results' class="w-100 btn btn-primary " (click)="showResults()"> Show results</button>
+            </div>
+          </div>
+          <div class="row" style="margin-top:20px">
+            <div class="p-1 w-100">
+
+              <!-- New game  -->
+              <button id='reset_game' class="w-100 btn btn-primary " (click)="resetGame()"> Reset Game</button>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="row text-right d-block" style="margin-top:20px">
+          <a [routerLink]="" (click)="open(content)"> View Key </a>
+        </div>
+      </div>
+
+      <!-- Game over message -->
+      <div class="col-sm-4 parent text-center" *ngIf='gameEndState'>
+        <h2>Game Over</h2>
+
+        <div>
+          <h2 class='text-break'>{{gameResultMessage}}</h2>
+          <div>Game State: {{gameEndState}}</div>
+          <div>{{gameResultReasonMessage}}</div>
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <div class="col-sm-12 p-0 w-100">
+
+            <!-- New game  -->
+            <button id='reset_game' class="w-100 btn btn-primary " (click)="resetGame()"> Reset Game</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Key modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Key</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span class="d-block font-weight-bold" class="d-block font-weight-bold" aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body p-4">
+
+    <div class="row  mt-2">
+      <div class="col-sm-2 p-1 w-100">
+        <img src="assets/images/Panther.svg" height="50px" alt="">
+      </div>
+      <div class="col-sm-10 p-0 w-100">
+        <div class="font-weight-bold">Panther icon</div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-sm-2 p-1 w-100">
+        <img src="assets/images/Pelican.svg" height="50px" alt="">
+      </div>
+      <div class="col-sm-10 p-0 w-100">
+        <div class="font-weight-bold">Pelican</div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-sm-2 p-1 w-100">
+        <img src="assets/images/torpedo.svg" height="50px" alt="">
+      </div>
+      <div class="col-sm-10 p-0 w-100">
+        <div class="font-weight-bold">Torpedo</div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-sm-2 p-1 w-100">
+        <img src="assets/images/Sonobouy-cold.svg" height="50px" alt="">
+      </div>
+      <div class="col-sm-10 p-0 w-100">
+        <div class="font-weight-bold">Sonobouy cold</div>All hexes within the sonobuoys range will have a green outline
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-sm-2 p-1 w-100">
+        <img src="assets/images/Sonobouy-hot.svg" height="50px" alt="">
+      </div>
+      <div class="col-sm-10 p-0 w-100">
+        <div class="font-weight-bold">Sonobouy hot</div>All hexes within the sonobuoys range will have a red outline
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-sm-2 p-1 w-100">
+        <img src="assets/images/Explosion.svg" height="50px" alt="">
+      </div>
+      <div class="col-sm-10 p-0 w-100">
+        <div class="font-weight-bold">Explosion</div>
+      </div>
+    </div>
+
+  </div>
+
+</ng-template>
+
+<!-- Loading spinner -->
+<ng-template #loading>
+  <div class="col-sm-12 w-100 h-100 pt-5 d-flex justify-content-center">
+    <div class="spinner-border " role="status">
+      <span class="font-weight-bold" class="d-block font-weight-bold" class="sr-only"></span>
+    </div>
+  </div>
+  <div class="text-center w-100 p-3">Loading...</div>
+</ng-template>
