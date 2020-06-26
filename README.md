@@ -1,0 +1,2 @@
+# plark_ai_public
+Montvieux has developed “The hunting of the PLARK” Artificial Intelligence (AI) testbed to support a Hackathon activity at the Alan Turing Institute (ATI). The testbed is very flexible and will support both short term exercises in the Hackathon and provide a basis for more extensive, long-term, and cutting edge research. The test bed can be used as a basis to research the limits of agent generalisation, co-operation, and deception in a defence environment.
