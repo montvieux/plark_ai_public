@@ -1335,6 +1335,10 @@ When you select to play an agent against another agent, you can use the dropdown
 
 ![](./Documentation/media/image17.png){width=100%}
 
+# Troubleshooting 
+
+If you go to http://localhost:5000 and see this error "jinja2.exceptions.TemplateNotFound", you just need to run "sh build_angular.sh” in the root of the project and restart the docker image. 
+
 # Version Information
 
 Version 1.0.0
