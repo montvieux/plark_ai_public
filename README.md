@@ -1354,6 +1354,7 @@ Version 1.0.0
 - The Pelican loadout has no maximum values, setting a large amount of torpedoes and or sonobuoys causes the UI to render off the screen.
 - Torpedo search range is not present in non image or image based state.
 - The Panther and Pelican start locations are currently not randomised, however these values can be easily overridden in the configuration files and there is some randomisation in the main Plark Env.
+- In the UI if you select default panther agent or default pelican agent the system incorrectly defaults to a human controled pelican agent. 
 
 ## Future Work
 
