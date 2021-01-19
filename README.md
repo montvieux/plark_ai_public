@@ -99,7 +99,7 @@ an API key:
 
 Before building the Docker container run the following:
 
-    Docker login nvcr.io
+    docker login nvcr.io
     The username is: $oauthtoken
     The password is: your API key.
 
@@ -144,11 +144,11 @@ the following:
 
 GPU command:
 
-    Docker build -t plark_ai -f ${PACKAGE_DIR}/Docker/Dockerfile  ${PACKAGE_DIR}/Docker
+    docker build -t plark_ai -f ${PACKAGE_DIR}/Docker/Dockerfile  ${PACKAGE_DIR}/Docker
 
 CPU command:
 
-    Docker build -t plark_ai -f ${PACKAGE_DIR}/Docker/DockerfileCPU  ${PACKAGE_DIR}/Docker
+    docker build -t plark_ai -f ${PACKAGE_DIR}/Docker/DockerfileCPU  ${PACKAGE_DIR}/Docker
 
 
 ## Step 4, Start a docker container
@@ -274,8 +274,8 @@ Running the below command will set up the pip modules, start-up both the Jupyter
 Once up and running (locally or remote) connect to the Docker container
 using the following command:
 
-    Docker ps # This will provide a container ID/name.  
-    Docker exec -it <ID of above Docker container> /bin/bash
+    docker ps # This will provide a container ID/name.  
+    docker exec -it <ID of above Docker container> /bin/bash
 
 ## Remote Server Access
 
