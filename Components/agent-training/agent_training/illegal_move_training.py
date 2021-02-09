@@ -56,7 +56,7 @@ def train_agent(exp_path,
     logger.info("Beginning training for {} steps".format(max_steps))
 
     best_avg_reward = None
-
+    model.set_env(env)
     while steps < max_steps:
         logger.info("Training for {} steps".format(testing_interval))
         model.learn(testing_interval)    

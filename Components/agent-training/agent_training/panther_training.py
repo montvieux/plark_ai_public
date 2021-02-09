@@ -55,6 +55,7 @@ def train_agent(exp_path,
                 n_eval_episodes=5
                 ):
     steps = 0
+    model.set_env(env)
     logger.info("Beginning training for {} steps".format(max_steps))
 
     best_avg_reward = None

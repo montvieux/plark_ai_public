@@ -37,6 +37,7 @@ display(HTML(data="""
 """))
 
 def retrain(mean_reward, target_reward, count, env, model):
+    model.set_env(env)
     if mean_reward < target_reward:
         count = count + 1
         model.learn(50)

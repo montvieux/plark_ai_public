@@ -40,7 +40,8 @@ logger = logging.getLogger(__name__)
 def train_agent(exp_path,model,env,testing_interval,max_steps,model_type,basicdate,tb_writer,tb_log_name,early_stopping=True, previous_steps=0):
     steps = 0
     logger.info("Beginning training for {} steps".format(max_steps))
-
+    model.set_env(env)
+    
     while steps < max_steps:
         logger.info("Training for {} steps".format(testing_interval))
         model.learn(testing_interval)    

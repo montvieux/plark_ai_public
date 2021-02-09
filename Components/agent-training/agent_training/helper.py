@@ -33,6 +33,7 @@ def make_new_model(model_type,policy,env, tensorboard_log=None):
     return model
 
 def train_until(model, env, victory_threshold=0.8, victory_trials=10, max_seconds=120, testing_interval=200, tb_writer=None, tb_log_name=None):
+    model.set_env(env)
     steps = 0
     max_victory_fraction = 0.0
     initial_time = datetime.datetime.now()
