@@ -382,17 +382,18 @@ class Newgame():
 			'map_height': self.map_height,
 		}
 
+		state['pelican_col'] = self.pelicanPlayer.col 
+		state['pelican_row'] = self.pelicanPlayer.row
+		state['madman'] = self.pelicanPlayer.madmanStatus
+		state['remaining_sonobuoys'] = len([obj for obj in self.pelicanPlayer.payload if obj.type == "SONOBUOY"])
+		state['deployed_sonobuoys'] = self.globalSonobuoys
+		state['remaining_torpedoes'] = len([obj for obj in self.pelicanPlayer.payload if obj.type == "TORPEDO"])
+		state['deployed_torpedoes'] = self.globalTorps	
+		
 		if view in ['PELICAN', 'ALL'] or self.driving_agent == 'pelican' or self.output_view_all:
 			state['pelican_max_moves'] = self.pelican_parameters['move_limit']
 			state['pelican_move_in_turn'] = self.pelican_move_in_turn
-			state['madman'] = self.pelicanPlayer.madmanStatus
-			state['pelican_col'] = self.pelicanPlayer.col 
-			state['pelican_row'] = self.pelicanPlayer.row
-			state['remaining_sonobuoys'] = len([obj for obj in self.pelicanPlayer.payload if obj.type == "SONOBUOY"])
-			state['deployed_sonobuoys'] = self.globalSonobuoys
-			state['remaining_torpedoes'] = len([obj for obj in self.pelicanPlayer.payload if obj.type == "TORPEDO"])
-			state['deployed_torpedoes'] = self.globalTorps
-			
+		
 		if view in ['PANTHER', 'ALL'] or self.driving_agent == 'panther':
 			state['panther_max_moves'] = self.panther_parameters['move_limit']
 			state['panther_move_in_turn'] = self.panther_move_in_turn

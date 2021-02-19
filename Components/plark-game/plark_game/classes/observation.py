@@ -216,31 +216,7 @@ class Observation():
 	def get_observation(self, state):
 		obs_label_from_state = []  
 		#logger.info("State: {}".format(state))
-		new_pelican_col,new_pelican_row = self._get_location(self.game.gameBoard, "PELICAN")
-		if new_pelican_col is not None:
-			self.pelican_col = new_pelican_col
-			self.pelican_row = new_pelican_row
-		state['pelican_location'] =  {'col': self.pelican_col, 'row': self.pelican_row}
-
-		new_panther_col, new_panther_row = self._get_location(self.game.gameBoard, "PANTHER")
-		if new_panther_col is not None:
-			self.panther_col = new_panther_col
-			self.panther_row = new_panther_row
-		state['panther_location'] =  {'col': self.panther_col, 'row': self.panther_row}
-		state['madman_status'] = self.game.pelicanPlayer.madmanStatus
-		state['sonobuoy_range'] = self.game.sonobuoy_parameters['active_range']
-
-
-		pelican_payload = self.game.pelicanPlayer.payload
-		remaining_sbs = len([obj for obj in pelican_payload if obj.type == "SONOBUOY"])
-		remaining_torps = len([obj for obj in pelican_payload if obj.type == "TORPEDO"])
-		state['remaining_sonobuoys'] = remaining_sbs
-		state['deployed_sonobuoys'] = [{'col': b.col, 'row': b.row, 'state': b.state} for b in self.game.globalSonobuoys]
-		state['remaining_torpedoes'] = remaining_torps
-		state['torpedo_hunt_enabled'] = self.game.torpedo_parameters['hunt']
-		state['torpedo_speeds'] = self.game.torpedo_parameters['speed']
-		state['deployed_torpedoes'] = [{'col': t.col, 'row': t.row} for t in self.game.globalTorps]
-
+	
 		obs = []
 		# Current game dimensions - fixed per game
 		obs += [state['map_width'], state['map_height']]
@@ -256,14 +232,14 @@ class Observation():
 			obs.append(remaining_pelican_moves)
 			obs_label_from_state.append('remaining_pelican_moves')
 			# Pelican location
-			obs += [state['pelican_location']['col'], state['pelican_location']['row']]
+			obs += [state['pelican_col'], state['pelican_row']]
 			obs_label_from_state.append('pel x')
 			obs_label_from_state.append('pel y')
 			# Madman status
-			obs.append(int(state['madman_status']))
+			obs.append(int(state['madman']))
 			obs_label_from_state.append('madman_status')
 			# Sonobuoy range - fixed per game
-			obs.append(state['sonobuoy_range'])
+			obs.append(state['sb_range'])
 			obs_label_from_state.append('sonobuoy_range')
 			# Remaining Sonobuoys
 			obs.append(state['remaining_sonobuoys'])
@@ -272,8 +248,8 @@ class Observation():
 			for i in range(self.max_sonobuoys):
 				if i < len(state['deployed_sonobuoys']):
 					buoy = state['deployed_sonobuoys'][i]
-					active = 1 if buoy['state'] == "HOT" else 0
-					obs += [buoy['col'], buoy['row'], active]
+					active = 1 if buoy.state == "HOT" else 0
+					obs += [buoy.col, buoy.row, active]
 					obs_label_from_state.append('sb x')
 					obs_label_from_state.append('sb y')
 					obs_label_from_state.append('sb active')
@@ -303,7 +279,7 @@ class Observation():
 			for i in range(self.max_torpedoes):
 				if i < len(state['deployed_torpedoes']):
 					torp = state['deployed_torpedoes'][i]
-					obs += [torp['col'], torp['row']]
+					obs += [torp.col, torp.row]
 					obs_label_from_state.append('torp x')
 					obs_label_from_state.append('torp y')
 				else:
@@ -316,18 +292,18 @@ class Observation():
 			obs.append(remaining_panther_moves)
 			obs_label_from_state.append('remaining_panther_moves')
 			# Pelican location
-			obs += [state['pelican_location']['col'], state['pelican_location']['row']]
+			obs += [state['pelican_col'], state['pelican_row']]
 			obs_label_from_state.append('pel x')
 			obs_label_from_state.append('pel y')
 			# Panther location
-			obs += [state['panther_location']['col'], state['panther_location']['row']]
+			obs += [state['panther_col'], state['panther_row']]
 			obs_label_from_state.append('pan x')
 			obs_label_from_state.append('pan y')
 			# Madman status
-			obs.append(int(state['madman_status']))
+			obs.append(int(state['madman']))
 			obs_label_from_state.append('madman_status')
 			# Sonobuoy range - fixed per game
-			obs.append(state['sonobuoy_range'])
+			obs.append(state['sb_range'])
 			obs_label_from_state.append('sonobuoy_range')
 			# Remaining Sonobuoys
 			obs.append(state['remaining_sonobuoys'])
@@ -336,8 +312,8 @@ class Observation():
 			for i in range(self.max_sonobuoys):
 				if i < len(state['deployed_sonobuoys']):
 					buoy = state['deployed_sonobuoys'][i]
-					active = 1 if buoy['state'] == "HOT" else 0
-					obs += [buoy['col'], buoy['row'], active]
+					active = 1 if buoy.state == "HOT" else 0
+					obs += [buoy.col, buoy.row, active]
 					obs_label_from_state.append('sb x')
 					obs_label_from_state.append('sb y')
 					obs_label_from_state.append('sb active')
@@ -368,7 +344,7 @@ class Observation():
 			for i in range(self.max_torpedoes):
 				if i < len(state['deployed_torpedoes']):
 					torp = state['deployed_torpedoes'][i]
-					obs += [torp['col'], torp['row']]
+					obs += [torp.col, torp.row]
 					obs_label_from_state.append('torp x')
 					obs_label_from_state.append('torp y')
 				else:
