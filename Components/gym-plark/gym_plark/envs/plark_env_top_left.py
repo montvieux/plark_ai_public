@@ -28,9 +28,9 @@ class PlarkEnvTopLeft(PlarkEnv):
 		action = self.ACTION_LOOKUP[action]
 		if self.verbose:
 			logger.info('Action:'+action)
-		gameState,uioutput = self.env.activeGames[len(self.env.activeGames)-1].game_step(action)
-		self.status = gameState
-		self.uioutput = uioutput 
+		game = self.env.activeGames[len(self.env.activeGames)-1]
+		state = game.game_step(action)
+		self.status = state['game_state']
 
 		reward = 0
 		self.new_pelican_col = self.env.activeGames[len(self.env.activeGames)-1].pelicanPlayer.col

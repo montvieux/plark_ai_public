@@ -98,7 +98,7 @@ class Newgame():
 				if self.pelican_move_in_turn <= self.pelican_parameters['move_limit'] and action != 'end':
 					self.perform_pelican_action(action)
 					if self.pelican_move_in_turn < self.pelican_parameters['move_limit']:
-						return self.gameState, self.gameBoard.UIOutput(self.gamePlayerTurn)
+						return self._state(self.gamePlayerTurn) 
 			else:
 				self.pelicanPhase()
 
@@ -123,7 +123,7 @@ class Newgame():
 				if self.panther_move_in_turn <= self.panther_parameters['move_limit'] and action != 'end':
 					self.perform_panther_action(action)
 					if self.panther_move_in_turn < self.panther_parameters['move_limit']:
-						return self.gameState, self.gameBoard.UIOutput(self.gamePlayerTurn)
+						return self._state(self.gamePlayerTurn) 
 			else:
 				self.pantherPhase()
 
@@ -150,7 +150,7 @@ class Newgame():
 			self.turn_count = self.turn_count + 1
 			self.phase = "PELICAN"
 
-		return self.gameState, self.gameBoard.UIOutput(self.gamePlayerTurn)
+		return self._state(self.gamePlayerTurn) 
 
 
 	def perform_panther_action(self, panther_action):
@@ -362,7 +362,8 @@ class Newgame():
 			raise ValueError("View", view, ' is not one of:', str(['PANTHER','PELICAN','ALL']) )
 
 		state = {
-			'mapFile': self.gameBoard.UIOutput(view),
+			#'mapFile': self.gameBoard.UIOutput(view),
+			'gameBoard': self.gameBoard.getGrid(view,self.pantherPlayer.col,self.pantherPlayer.row), # Issue is that this has information that is not privelaged.
 			'maxTurns': self.maxTurns,
 			'turn_count': self.turn_count,
 			'game_state': self.gameState,

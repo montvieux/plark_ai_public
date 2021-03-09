@@ -31,76 +31,83 @@ class Map():
     def toJson(self):
         return jsonpickle.encode(self._grid)
 
-    def UIOutput(self, view ):
+    def getGrid(self,view,panther_col,panther_row):
         if view not in ['PELICAN','PANTHER','ALL']:
             raise ValueError('Incorrect view must be "PELICAN","PANTHER" or "ALL"  ')
+        #Remove the panther if the view is pelican.
+        if view == "PELICAN":
+            grid = copy.deepcopy(self._grid)
+            hexCell = grid[panther_col][panther_row] 
+            objects = [] 
+            panther_found = False
+            for item in hexCell.objects:
+                if item.type == "PANTHER":
+                    panther_found = True
+                else:
+                    objects.append(item)
+            if panther_found is False:
+                print('Did not find panther in grid as expected')
+            hexCell.objects = objects   
+            grid[panther_col][panther_row] = hexCell
+            return grid
+        else:
+            return self._grid
 
-        uiOutput = [[0 for x in range(self.rows)] for y in range(self.cols)]
+    # def UIOutput(self, view ):
+    #     if view not in ['PELICAN','PANTHER','ALL']:
+    #         raise ValueError('Incorrect view must be "PELICAN","PANTHER" or "ALL"  ')
 
-        for col in range(self.cols):
-            for row in range(self.rows):
-                uiOutput[col][row] = {
-                    "HexType": 0,
-                    "coordinate": [
-                        col,
-                        row
-                    ],
-                    "objects": {}
-                }                      
+    #     uiOutput = [[0 for x in range(self.rows)] for y in range(self.cols)]
 
-        for col in range(self.cols):
-            for row in range(self.rows):
+    #     for col in range(self.cols):
+    #         for row in range(self.rows):
+    #             uiOutput[col][row] = {
+    #                 "HexType": 0,
+    #                 "coordinate": [
+    #                     col,
+    #                     row
+    #                 ],
+    #                 "objects": {}
+    #             }                      
+
+    #     for col in range(self.cols):
+    #         for row in range(self.rows):
        
-                hexCell = self._grid[col][row]
-                if view == "PANTHER":
-                    for item in hexCell.getCellObjects():
-                        if item.type == 'SONOBUOY':
-                            uiOutput[col][row]['objects'][item.type] = item.state
+    #             hexCell = self._grid[col][row]
+    #             if view in ["PANTHER","ALL"]:
+    #                 for item in hexCell.getCellObjects():
+    #                     if item.type == 'SONOBUOY':
+    #                         uiOutput[col][row]['objects'][item.type] = item.state
 
-                            # add marker to all in radius 
-                            sonar_area = self.getRadius(item.col, item.row, item.range)
-                            for cell in sonar_area:
-                                cell_col = cell['col']
-                                cell_row = cell['row']
-                                uiOutput[cell_col][cell_row]['objects']['sonar_area'] = item.state
+    #                         # add marker to all in radius 
+    #                         sonar_area = self.getRadius(item.col, item.row, item.range)
+    #                         for cell in sonar_area:
+    #                             cell_col = cell['col']
+    #                             cell_row = cell['row']
+    #                             uiOutput[cell_col][cell_row]['objects']['sonar_area'] = item.state
                         
-                        else:
-                            uiOutput[col][row]['objects'][item.type] = True
+    #                     else:
+    #                         uiOutput[col][row]['objects'][item.type] = True
 
-                elif view == "PELICAN":
-                    for item in hexCell.getCellObjects():
-                        if item.type == 'SONOBUOY':
-                            uiOutput[col][row]['objects'][item.type] = item.state
+    #             elif view == "PELICAN":
+    #                 for item in hexCell.getCellObjects():
+    #                     if item.type == 'SONOBUOY':
+    #                         uiOutput[col][row]['objects'][item.type] = item.state
 
-                            # add marker to all in radius 
-                            sonar_area = self.getRadius(item.col, item.row, item.range)
-                            for cell in sonar_area:
+    #                         # add marker to all in radius 
+    #                         sonar_area = self.getRadius(item.col, item.row, item.range)
+    #                         for cell in sonar_area:
 
-                                cell_col = cell['col']
-                                cell_row = cell['row']
-                                uiOutput[cell_col][cell_row]['objects']['sonar_area'] = item.state
-                        elif item.type == "PANTHER":
-                            pass
+    #                             cell_col = cell['col']
+    #                             cell_row = cell['row']
+    #                             uiOutput[cell_col][cell_row]['objects']['sonar_area'] = item.state
+    #                     elif item.type == "PANTHER":
+    #                         pass
 
-                        else:
-                            uiOutput[col][row]['objects'][item.type] = True
+    #                     else:
+    #                         uiOutput[col][row]['objects'][item.type] = True
 
-                elif view == "ALL":
-                    for item in hexCell.getCellObjects():
-                        if item.type == 'SONOBUOY':
-                            uiOutput[col][row]['objects'][item.type] = item.state
-
-                            # add marker to all in radius 
-                            sonar_area = self.getRadius(item.col, item.row, item.range)
-                            for cell in sonar_area:
-                                cell_col = cell['col']
-                                cell_row = cell['row']
-                                uiOutput[cell_col][cell_row]['objects']['sonar_area'] = item.state
-                        else:
-                            uiOutput[col][row]['objects'][item.type] = True
-
-        return jsonpickle.encode(uiOutput) 
-        # return uiOutput
+    #     return jsonpickle.encode(uiOutput) 
 
     def is_item_type_in_cell(self, item_type, col, row): 
         cell = self.getCell(col, row)

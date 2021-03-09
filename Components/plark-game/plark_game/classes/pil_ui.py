@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime
 import logging
 import math
+from .map import Map
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -462,8 +463,11 @@ class PIL_UI():
         self.torp_speeds = torp_speeds
         self.render_width = render_width
         self.render_height = render_height
-
-        self.loadMapFromJson(gameFile['mapFile'])
+        self.map = None
+        
+        #self.loadMapFromJson(gameFile['mapFile'])
+        
+        self.process_game_board(gameFile['gameBoard'])
         self.loadFont(self.rows)
         # Initilise Grid components
         self.grid = HexagonalGrid(self.scale, self.rows, self.cols, sonobuoy_display_range=self.sonobuoy_display_range)
@@ -495,7 +499,8 @@ class PIL_UI():
         self.idraw = ImageDraw.Draw(self.ui_img)
 
         # Update the UI map from recieved JSON file
-        self.loadMapFromJson(gameFile['mapFile'])
+        #self.loadMapFromJson(gameFile['mapFile'])
+        self.process_game_board(gameFile['gameBoard'])
 
         # Updates the display components with updates information
         self.grid.renderUIGrid(self.gridMap, self.idraw)
@@ -522,11 +527,54 @@ class PIL_UI():
         else:
             return self.ui_img.resize([self.render_width,self.render_height], Image.LANCZOS)
       
-    def loadMapFromJson(self, mapfile):
-        # Loads map from file adjusting rows and cols for rendering.
-        self.gridMap = json.loads(mapfile)
-        self.rows = len(self.gridMap[0])
-        self.cols = len(self.gridMap)
+    # def loadMapFromJson(self, mapfile):
+    #     # Loads map from file adjusting rows and cols for rendering.
+    #     self.gridMap = json.loads(mapfile)
+    #     self.rows = len(self.gridMap[0])
+    #     self.cols = len(self.gridMap)
+
+
+    def process_game_board(self, gameBoard):
+        self.rows = len(gameBoard[0])
+        self.cols = len(gameBoard)
+        if self.map is None:
+            self.map = Map(self.cols,self.rows)
+
+        uiOutput = [[0 for x in range(self.rows)] for y in range(self.cols)]
+
+        for col in range(self.cols):
+            for row in range(self.rows):
+                uiOutput[col][row] = {
+                    "HexType": 0,
+                    "coordinate": [
+                        col,
+                        row
+                    ],
+                    "objects": {}
+                }                      
+
+        for col in range(self.cols):
+            for row in range(self.rows):
+       
+                hexCell = gameBoard[col][row]
+             
+                for item in hexCell.objects:
+                    if item.type == 'SONOBUOY':
+                        uiOutput[col][row]['objects'][item.type] = item.state
+
+                        # add marker to all in radius 
+                        sonar_area = self.map.getRadius(item.col, item.row, item.range)
+                        for cell in sonar_area:
+                            cell_col = cell['col']
+                            cell_row = cell['row']
+                            uiOutput[cell_col][cell_row]['objects']['sonar_area'] = item.state
+                    
+                    else:
+                        uiOutput[col][row]['objects'][item.type] = True
+
+        self.gridMap = uiOutput
+
+        
 
     def loadFont(self, font_size = 16):
         # Load font file

@@ -149,9 +149,8 @@ class PlarkEnv(gym.Env):
 
 		if self.verbose:
 			logger.info('Action:'+action)
-		gameState,uioutput = game.game_step(action)
-		self.status = gameState
-		self.uioutput = uioutput 
+		state = game.game_step(action)
+		self.status = state['game_state']
 		
 		ob = self._observation()
 
