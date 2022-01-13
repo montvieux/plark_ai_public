@@ -55,6 +55,7 @@ ADD jupyter_notebook_config.json /root/.jupyter/jupyter_notebook_config.json
 RUN ln -sfn /usr/bin/pip3 /usr/bin/pip
 RUN ln -sfn /usr/bin/python3.6 /usr/bin/python
 RUN pip install tensorflow==1.14
+RUN pip install --upgrade pip
 ADD requirements.txt /usr/local/requirements.txt
 RUN pip install --upgrade -r /usr/local/requirements.txt
 
