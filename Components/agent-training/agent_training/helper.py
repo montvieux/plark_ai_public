@@ -9,10 +9,8 @@ import numpy as np
 from plark_game import classes
 from gym_plark.envs import plark_env
 
-from stable_baselines.common.env_checker import check_env
-from stable_baselines import DQN, PPO2, A2C, ACKTR
-from stable_baselines.bench import Monitor
-from stable_baselines.common.vec_env import DummyVecEnv, VecEnv
+from stable_baselines3 import DQN, PPO, A2C
+from stable_baselines3.common.vec_env import VecEnv
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -24,12 +22,10 @@ def model_label(modeltype,basicdate,modelplayer):
 def make_new_model(model_type,policy,env, tensorboard_log=None):
     if model_type.lower() == 'dqn':
         model = DQN(policy,env,tensorboard_log=tensorboard_log)
-    elif model_type.lower() == 'ppo2':
-        model = PPO2(policy,env,tensorboard_log=tensorboard_log)
+    elif model_type.lower() == 'ppo':
+        model = PPO(policy,env,tensorboard_log=tensorboard_log)
     elif model_type.lower() == 'a2c':
         model = A2C(policy,env,tensorboard_log=tensorboard_log)
-    elif model_type.lower() == 'acktr':
-        model = ACKTR(policy,env,tensorboard_log=tensorboard_log)
     return model
 
 def train_until(model, env, victory_threshold=0.8, victory_trials=10, max_seconds=120, testing_interval=200, tb_writer=None, tb_log_name=None):

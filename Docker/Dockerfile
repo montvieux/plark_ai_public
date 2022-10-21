@@ -20,10 +20,6 @@ RUN apt-get -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-#jupyter notebook password
-#cloudywithachanceofamonia
-ADD jupyter_notebook_config.json /root/.jupyter/jupyter_notebook_config.json
-
 ADD requirements.txt /usr/local/requirements.txt
 RUN pip install --upgrade -r /usr/local/requirements.txt
 

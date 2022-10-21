@@ -1,63 +1,58 @@
 FROM ubuntu:18.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+ARG PYTORCH_DEPS=cpuonly
+ARG PYTHON_VERSION=3.7
 
-RUN apt-get -y update \
-    && apt-get -y install \
-    python3.6 \
-    python3-pip \
-    python3.6-tk \
-    ffmpeg \
-    wget \
-    curl \
-    cmake \
-    default-jre \
-    git \
-    jq \
-    libfontconfig1 \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender1 \
-    libxi6 libgconf-2-4 -y \
-    unzip \
-    xvfb \
-    libopenmpi-dev \
-    zlib1g-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+         build-essential \
+         cmake \
+         git \
+         curl \
+         ca-certificates \
+         libjpeg-dev \
+         libpng-dev \
+         libglib2.0-0 && \
+     rm -rf /var/lib/apt/lists/*
+
+
+# Install Anaconda and dependencies
+RUN curl -o ~/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+     chmod +x ~/miniconda.sh && \
+     ~/miniconda.sh -b -p /opt/conda && \
+     rm ~/miniconda.sh && \
+     /opt/conda/bin/conda install -y python=$PYTHON_VERSION numpy pyyaml scipy ipython mkl mkl-include && \
+     /opt/conda/bin/conda install -y pytorch $PYTORCH_DEPS -c pytorch && \
+     /opt/conda/bin/conda clean -ya
+ENV PATH /opt/conda/bin:$PATH
+
+# RUN pip install --upgrade pip
+RUN pip uninstall -y opencv-python && \
+    pip install opencv-python-headless
+ADD requirements.txt /usr/local/requirements.txt
+# RUN pip install --upgrade -r /usr/local/requirements.txt
 
 # Set up the Chrome PPA
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+# RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+# RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
 
 # Update the package list and install chrome
-RUN apt-get update -y
-RUN apt-get install -y google-chrome-stable 
+# RUN apt-get update -y
+# RUN apt-get install -y google-chrome-stable 
 
 # Set up Chromedriver Environment variables
-ENV CHROMEDRIVER_DIR /chromedriver
-RUN mkdir -p $CHROMEDRIVER_DIR
+# ENV CHROMEDRIVER_DIR /chromedriver
+# RUN mkdir -p $CHROMEDRIVER_DIR
 
 
 # Download and install Chromedriver
-RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/80.0.3987.106/chromedriver_linux64.zip"
-RUN unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
-RUN chmod +x $CHROMEDRIVER_DIR/chromedriver
+# RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/80.0.3987.106/chromedriver_linux64.zip"
+# RUN unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
+# RUN chmod +x $CHROMEDRIVER_DIR/chromedriver
 
 # Put Chromedriver into the PATH
-ENV PATH $CHROMEDRIVER_DIR:$PATH
+# ENV PATH $CHROMEDRIVER_DIR:$PATH
 
-#jupyter notebook password
-#cloudywithachanceofamonia
-ADD jupyter_notebook_config.json /root/.jupyter/jupyter_notebook_config.json
-
-RUN ln -sfn /usr/bin/pip3 /usr/bin/pip
-RUN ln -sfn /usr/bin/python3.6 /usr/bin/python
-RUN pip install tensorflow==1.14
-RUN pip install --upgrade pip
-ADD requirements.txt /usr/local/requirements.txt
-RUN pip install --upgrade -r /usr/local/requirements.txt
 
 ADD run_servers.sh /run_servers.sh
 ADD plark_robot_tests /plark_robot_tests
