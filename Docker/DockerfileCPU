@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
          git \
          curl \
          ca-certificates \
+         ffmpeg \
          libjpeg-dev \
          libpng-dev \
          libglib2.0-0 && \
@@ -30,7 +31,7 @@ ENV PATH /opt/conda/bin:$PATH
 RUN pip uninstall -y opencv-python && \
     pip install opencv-python-headless
 ADD requirements.txt /usr/local/requirements.txt
-# RUN pip install --upgrade -r /usr/local/requirements.txt
+RUN pip install --upgrade -r /usr/local/requirements.txt
 
 # Set up the Chrome PPA
 # RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -70,9 +71,10 @@ CMD sh run_servers.sh && tail -f /dev/null
 # Note that most of the installed packages from before are cached by docker to save time
 # To run the docker container:
 #       - sudo docker run --runtime=nvidia -v /home/aidanjones/repos/plark_ai/Components:/Components -v /datasets/plark_ai:/data -p 8890:8888 -p 5001:5000 -it --shm-size=8192m plark_ai /bin/bash 
+#       - docker run -v /Users/aidanjones/repos/plark_ai_public/Components:/Components -v /Users/aidanjones/repos/plark_ai_public/data:/data -p 8890:8888 -p 5001:5000 -it --shm-size=8192m plark_ai /bin/bash 
 # STEPS FOR JUPYTER
 # Inside the container, run jupyter:
-#        - jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root &
+#        - jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root --NotebookApp.iopub_data_rate_limit=1000000 --NotebookApp.token='' & 
 # Note: the port 8888 is the docker containers local port which you mapped to port 8892 on the server
 # http://localhost:8890/tree
 # jupyter notebook password

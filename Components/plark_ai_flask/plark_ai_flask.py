@@ -21,8 +21,6 @@ from plark_game import classes
 
 from agent_training import helper 
 
-import tensorflow as tf
-tf.logging.set_verbosity(tf.logging.ERROR)
 
 import logging
 logging.basicConfig(level=logging.INFO)

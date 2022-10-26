@@ -337,7 +337,8 @@ def make_video(model,env,video_file_path,n_steps = 10000,fps=10,deterministic=Fa
     for step in range(n_steps):
         image = env.render(view='ALL')
         action, _ = model.predict(obs, deterministic=deterministic)
-    
+        action = action.tolist()
+
         obs, reward, done, info = env.step(action)
         if verbose:
             logger.info("Step: "+str(step)+" Action: "+str(action)+' Reward:'+str(reward)+' Done:'+str(done))

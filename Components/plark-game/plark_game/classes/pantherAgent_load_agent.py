@@ -61,5 +61,6 @@ class Panther_Agent_Load_Agent(Panther_Agent):
 			obs = self.observation.get_observation(state) 
 
 		action, _ = self.model.predict(obs, deterministic=False)
+		action = action.tolist()
 		return self.action_lookup(action)
 

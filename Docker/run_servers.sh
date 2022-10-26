@@ -1,9 +1,9 @@
 #!/bin/bash
 # Example usage
 # sh run_servers.sh
-pip3 install -e /Components/plark-game
-pip3 install -e /Components/gym-plark
-pip3 install -e /Components/agent-training
+pip install -e /Components/plark-game
+pip install -e /Components/gym-plark
+pip install -e /Components/agent-training
 
 echo "*********************"
 echo "Starting Jupyter:"
